@@ -1,0 +1,21 @@
+{
+  "name": "ssr-vue-todo",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "server": "node ./main.js",
+    "watch": "node --watch ./main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7",
+    "vue": "^3.4.26"
+  }
+}

@@ -1,0 +1,48 @@
+.form-parent {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.form-parent .form-item {
+    width: 100%;
+}
+
+.form-parent .form-item input:not([type="checkbox"]),
+.form-parent .form-item textarea {
+    width: 100%;
+}
+
+.form-parent .form-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 14px;
+}
+
+.todo-root .todo-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 7px;
+}
+
+.todo-root .todo-actions .todo-modified {
+    flex-grow: 1;
+}
+
+.todo-root .todo-description {
+    font-size: .85em;
+}
+
+.todo-root .todo-actions .todo-date {
+    font-size: 12px;
+    margin-right: auto;
+}
+
+.todo-root .todo-actions form input[type="submit"] {
+    margin-bottom: 0;
+    font-size: 12px;
+    padding: 5px 7px;
+    height: 35px;
+}
