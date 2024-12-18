@@ -1,7 +1,7 @@
 import express from 'express'
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
-import compression from 'compression';
+import cookieParser from 'cookie-parser'
+import bodyParser from 'body-parser'
+import compression from 'compression'
 import { renderToString } from 'vue/server-renderer'
 import { defaultView } from './common/viewTemplate.js'
 import { useFrontpage } from './views/frontpage.js'
@@ -11,6 +11,9 @@ import {
 	useUpdateTodo,
 	useDeleteTodo
 } from './views/editTodo.js'
+import {
+	authenticate
+} from 'viixet-authn'
 
 const server = express()
 const port = 3150
@@ -18,11 +21,25 @@ const port = 3150
 server.disable('x-powered-by')
 server.use(compression())
 server.use(cookieParser())
-server.use(bodyParser.json({ limit: '50mb' }));
+server.use(bodyParser.json({ limit: '50mb' }))
 server.use(bodyParser.urlencoded({
     extended: true,
     limit: '50mb',
 }))
+
+const authenticationMiddleware = async (req, res, next) => {
+	try {
+		const user = await authenticate('123')
+
+		req.user = user
+	} catch (e) {
+		console.log(e.stack)
+	}
+
+	next()
+}
+
+server.use(authenticationMiddleware)
 
 server.get('/', async (req, res) => {
 	const { search } = req.query
