@@ -16,7 +16,8 @@ import {
 import {
 	authenticate,
 	registerUser,
-	loginUser
+	loginUser,
+    logoutUser,
 } from 'viixet-authn'
 
 const server = express()
@@ -32,25 +33,25 @@ server.use(bodyParser.urlencoded({
 }))
 
 const authenticationMiddleware = async (req, res, next) => {
-    const publicRoutes = ['/login', '/register'];
+    const publicRoutes = ['/login', '/register']
 
     if (publicRoutes.includes(req.path)) {
-        return next();
+        return next()
     }
 
-    const sessionId = req.cookies?.session_id;
+    const sessionId = req.cookies?.session_id
 	
     if (!sessionId) {
         return res.redirect('/login');
     }
 
     try {
-        const user = await authenticate(sessionId);
-        req.user = user;
-        next();
+        const user = await authenticate(sessionId)
+        req.user = user
+        next()
     } catch (e) {
-        console.log(e.stack);
-        return res.redirect('/login');
+        console.log(e.stack)
+        return res.redirect('/login')
     }
 }
 
@@ -102,12 +103,38 @@ server.get('/login', async (req, res) => {
 	res.send(defaultView(html))
 })
 
+server.post('/logout', async (req, res) => {
+    try {
+        const sessionId = req.cookies?.session_id
+
+        if (sessionId) {
+            const success = await logoutUser(sessionId)
+
+            if (success) {
+                res.clearCookie('session_id', {
+                    httpOnly: true,
+                    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+                    sameSite: 'lax',
+                })
+            } else {
+                console.log('Error during logout: logout failed', sessionId)
+            }
+        } else {
+            console.log('Error during logout: no session ID found')
+        }
+    } catch (error) {
+        console.log('Error during logout:', error)
+    }
+
+    return res.redirect('/login')
+})
+
 server.post('/login', async (req, res) => {
     const { username, password } = req.body
 
     try {
         const { session_id } = await loginUser(username, password);
-		console.log(session_id)
+		
         if (session_id) {
 			// 1 week
 			const maxAge = 7 * 24 * 60 * 60 * 1000
@@ -131,7 +158,7 @@ server.post('/login', async (req, res) => {
 
 server.get('/', async (req, res) => {
 	const { search } = req.query
-	const view = await useFrontpage(search)
+	const view = await useFrontpage(req.user, search)
 	const html = await renderToString(view)
 
 	res.send(defaultView(html))
