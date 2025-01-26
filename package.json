@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "viixet-authn": "file:../viixet-authn",
+    "viixet-authn": "git+ssh://git@github.com:opiispanen/viixet-authn.git",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "express": "^4.19.2",
