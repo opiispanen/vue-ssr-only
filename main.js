@@ -173,7 +173,7 @@ server.get('/create', async (req, res) => {
 
 server.get('/edit/:todoId', async (req, res) => {
 	const { todoId } = req.params
-	const view = await useEditTodo(todoId)
+	const view = await useEditTodo(req.user, todoId)
 	const html = await renderToString(view)
 
 	res.send(defaultView(html))

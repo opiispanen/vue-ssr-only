@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "postinstall": "node ./db/createDB.js",
-    "server": "node ./main.js",
-    "watch": "node --watch ./main.js",
+    "serve": "node ./main.js",
+    "dev": "node --watch ./main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
