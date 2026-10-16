@@ -18,6 +18,7 @@ import {
 	registerUser,
 	loginUser,
     logoutUser,
+    VIIXET_AUTHN_ERRORS as ERRORS,
 } from 'viixet-authn'
 
 const server = express()
@@ -91,6 +92,11 @@ server.post('/register', async (req, res) => {
 
         return res.redirect(`/register?error=registration_failed`);
     } catch (error) {
+        if (error.message === ERRORS.USER_ALREADYEXISTS) {
+            // username or email is already in use
+            return res.redirect('/register?error=user_exists');
+        }
+
         console.log('Error during registration:', error);
         return res.redirect('/register?error=server_error');
     }
@@ -133,7 +139,7 @@ server.post('/login', async (req, res) => {
     const { username, password } = req.body
 
     try {
-        const { session_id } = await loginUser(username, password);
+        const { session_id } = await loginUser(username, password, { ip: req.ip });
 		
         if (session_id) {
 			// 1 week
@@ -151,6 +157,17 @@ server.post('/login', async (req, res) => {
 
         return res.redirect('/login?error=login_failed');
     } catch (error) {
+        if (error.message === ERRORS.RATE_LIMITED) {
+            return res
+                .status(429)
+                .set('Retry-After', String(error.retryAfter))
+                .send('Too many attempts, try again later');
+        }
+
+        if (error.message === ERRORS.USER_NOTFOUND || error.message === ERRORS.CREDENTIALS_INVALID) {
+            return res.redirect('/login?error=login_failed');
+        }
+
         console.log('Error during login:', error);
         return res.redirect('/login?error=server_error');
     }
