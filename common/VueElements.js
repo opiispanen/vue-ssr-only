@@ -1,3 +1,12 @@
+export const LogoutAction = {
+    template: /*html*/`<form 
+        class="logout-form" 
+        action="/logout" 
+        method="POST">
+        <input type="submit" value="Logout" />
+    </form>`,
+}
+
 export const TodoAction = {
     props: ['todo'],
     template: /*html*/`<form action="/update" method="POST">

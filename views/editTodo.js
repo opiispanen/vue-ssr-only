@@ -1,13 +1,13 @@
 import { createSSRApp } from 'vue'
 import { loadTodos, createTodo, updateTodo, deleteTodo } from '../db/todos.js'
 
-export async function useEditTodo(todoId = null) {
+export async function useEditTodo(user, todoId = null) {
     const data = {
         todo: {}
     }
     
     if (todoId) {
-        const [ todo ] = await loadTodos(todoId)
+        const [ todo ] = await loadTodos(user.user_id, todoId)
         data.todo = todo
     }
     
@@ -62,8 +62,8 @@ export async function useEditTodo(todoId = null) {
 }
 
 export async function useSaveTodo(req, res) {
-    const { body } = req
-    const success = await createTodo(body)
+    const { body, user } = req
+    const success = await createTodo(user, body)
 
     res.redirect(`/?todo_save_success=${ success ? 1 : 0 }`)
 }

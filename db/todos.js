@@ -1,11 +1,12 @@
 import { transaction } from './transaction.js';
 /**
  * 
+ * @param {String} userId
  * @param {Number} todoId 
  * @param {String} search 
  * @returns {Array}
  */
-export async function loadTodos(todoId = null, search = null) {
+export async function loadTodos(userId, todoId = null, search = null) {
     try {
         let where = 'WHERE deleted = 0'
         let data = []
@@ -23,8 +24,10 @@ export async function loadTodos(todoId = null, search = null) {
             ]
         }
 
+        data.push(userId)
+
         const { rows } = await transaction(
-            `SELECT * FROM todo ${where} ORDER BY state ASC, modified DESC`,
+            `SELECT * FROM todo ${where} AND userId = ? ORDER BY state ASC, modified DESC`,
             data
         )
         
@@ -36,13 +39,13 @@ export async function loadTodos(todoId = null, search = null) {
     return []
 }
 
-export async function createTodo({ title, description }) {
+export async function createTodo(user, { title, description }) {
     if (!title) {
         return false
     }
 
-    const query = `INSERT INTO todo (title, description, extra, state) VALUES (?, ?, NULL, ?)`
-	const data = [title, description, 0]
+    const query = `INSERT INTO todo (userId, title, description, extra, state) VALUES (?, ?, ?, NULL, ?)`
+	const data = [ user.user_id, title, description, 0 ]
 
     try {
         const { id } = await transaction(query, data)

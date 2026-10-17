@@ -13,7 +13,8 @@ db.serialize(() => {
 		description TEXT,
 		extra TEXT,
 		state INTEGER DEFAULT 0,
-		deleted INTEGER DEFAULT 0
+		deleted INTEGER DEFAULT 0,
+        userId TEXT
 	)`);
 
 	// Create the 'folder' table
@@ -23,7 +24,8 @@ db.serialize(() => {
 		modified DATETIME DEFAULT CURRENT_TIMESTAMP,
 		name TEXT,
 		todos TEXT,
-		deleted INTEGER DEFAULT 0
+		deleted INTEGER DEFAULT 0,
+        userId TEXT
 	)`);
 });
 

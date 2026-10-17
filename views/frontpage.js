@@ -1,15 +1,17 @@
 import { createSSRApp } from 'vue'
 import { loadTodos } from '../db/todos.js'
-import { TodoElement } from '../common/VueElements.js'
+import { TodoElement, LogoutAction } from '../common/VueElements.js'
 
-export async function useFrontpage(search = null) {
-    const todos = await loadTodos(null, search)
+export async function useFrontpage(user, search = null) {
+    const todos = await loadTodos(user.user_id, null, search)
 
     return createSSRApp({
         components: {
             TodoElement,
+            LogoutAction,
         },
         template: /*html*/`<header class="container">
+            <LogoutAction />
             <a href="/create">Add a task</a> 
         </header>
         <main class="container">

@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "postinstall": "node ./db/createDB.js",
-    "server": "node ./main.js",
-    "watch": "node --watch ./main.js",
+    "serve": "node ./main.js",
+    "dev": "node --watch ./main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "viixet-authn": "github:opiispanen/viixet-authn",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "express": "^4.19.2",
